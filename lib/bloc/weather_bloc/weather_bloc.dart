@@ -99,11 +99,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
             "http://api.openweathermap.org/data/2.5/onecall?lat=${state.lat}&lon=${state.lon}&exclude=minutely&appid=800fa38035fea9e71554e7d7134e0190&units=metric&lang=ru");
         var response =
             await http.get(url, headers: {"Accept": "application/json"});
-        Uri urlMonth1 = Uri.parse(
-            'https://history.openweathermap.org/data/2.5/aggregated/month?month=1&${state.lat}&lon=${state.lon}&appid=800fa38035fea9e71554e7d7134e0190&units=metric&lang=ru');
-        var responseMonth1 =
-            await http.get(urlMonth1, headers: {"Accept": "application/json"});
-        log(json.decode(responseMonth1.body)['result']['temp']['median']);
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response, then parse the JSON.
           _localSettingRepository.saveCurrentWeather(response.body);
@@ -145,6 +140,10 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       }
     });
     on<InitialSetting>((event, emit) async {
+      Uri url = Uri.parse(
+          'http://history.openweathermap.org/data/2.5/aggregated/month?lat=${state.lat}&lon=${state.lon}&month=1&appid=800fa38035fea9e71554e7d7134e0190&units');
+      var response = await http.get(url);
+      log(response.body);
       // Проверяем нашу сохраненную тему
       String theme = await _localSettingRepository.readTheme();
       if (theme != "Couldn't read file") {
