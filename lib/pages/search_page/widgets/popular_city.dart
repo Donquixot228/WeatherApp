@@ -30,6 +30,7 @@ class BuildPopularCity extends StatelessWidget {
                   label: Text(
                     city,
                     style: TextStyle(
+
                       color: state.isDark != true
                           ? AppColors.tl_primary
                           : AppColors.td_primary,
