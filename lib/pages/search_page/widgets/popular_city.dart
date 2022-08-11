@@ -10,52 +10,128 @@ import '../../../resources/app_colors.dart';
 import '../../../utils/popular_cities.dart';
 
 class BuildPopularCity extends StatelessWidget {
+  String type;
+
+  BuildPopularCity(this.type);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
         List<Widget> buildListCities() {
           List<Widget> choices = [];
-          cities.forEach((city) {
-            choices.add(
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: ActionChip(
-                  backgroundColor:
-                  state.isDark != true
-                      ? AppColors.cl_background
-                      : AppColors.cd_background,
-                  elevation: 0,
-                  pressElevation: 0,
-                  label: Text(
-                    city,
-                    style: TextStyle(
-
-                      color: state.isDark != true
-                          ? AppColors.tl_primary
-                          : AppColors.td_primary,
-                      fontWeight: FontWeight.w300,
+          if (type == 'Большие') {
+            bigCities.forEach((city) {
+              choices.add(
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ActionChip(
+                    backgroundColor: state.isDark != true
+                        ? AppColors.cl_background
+                        : AppColors.cd_background,
+                    elevation: 0,
+                    pressElevation: 0,
+                    label: Text(
+                      city,
+                      style: TextStyle(
+                        color: state.isDark != true
+                            ? AppColors.tl_primary
+                            : AppColors.td_primary,
+                        fontWeight: FontWeight.w300,
+                      ),
                     ),
+                    onPressed: () {
+                      context.read<WeatherBloc>().add(ChangeSearchQuery(city));
+                      context
+                          .read<WeatherBloc>()
+                          .add(ChangeCitySize('Большой'));
+                      context.read<WeatherBloc>().add(GetWeatherByCity());
+
+                      log(state.searchQuery);
+                      locator<NavigationService>().goBack();
+                    },
                   ),
-                  onPressed: () {
-                    context.read<WeatherBloc>().add(ChangeSearchQuery(city));
-                    context.read<WeatherBloc>().add(GetWeatherByCity());
-                    log(state.searchQuery);
-                    locator<NavigationService>().goBack();
-                  },
                 ),
-              ),
-            );
-          });
-          return choices;
+              );
+            });
+            return choices;
+          } else if (type == 'Средние') {
+            mediumCities.forEach((city) {
+              choices.add(
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ActionChip(
+                    backgroundColor: state.isDark != true
+                        ? AppColors.cl_background
+                        : AppColors.cd_background,
+                    elevation: 0,
+                    pressElevation: 0,
+                    label: Text(
+                      city,
+                      style: TextStyle(
+                        color: state.isDark != true
+                            ? AppColors.tl_primary
+                            : AppColors.td_primary,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    onPressed: () {
+                      context.read<WeatherBloc>().add(ChangeSearchQuery(city));
+                      context
+                          .read<WeatherBloc>()
+                          .add(ChangeCitySize('Средний'));
+                      context.read<WeatherBloc>().add(GetWeatherByCity());
+
+                      log(state.searchQuery);
+                      locator<NavigationService>().goBack();
+                    },
+                  ),
+                ),
+              );
+            });
+            return choices;
+          } else {
+            smallCities.forEach((city) {
+              choices.add(
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ActionChip(
+                    backgroundColor: state.isDark != true
+                        ? AppColors.cl_background
+                        : AppColors.cd_background,
+                    elevation: 0,
+                    pressElevation: 0,
+                    label: Text(
+                      city,
+                      style: TextStyle(
+                        color: state.isDark != true
+                            ? AppColors.tl_primary
+                            : AppColors.td_primary,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    onPressed: () {
+                      context.read<WeatherBloc>().add(ChangeSearchQuery(city));
+                      context.read<WeatherBloc>().add(ChangeCitySize('Малый'));
+                      context.read<WeatherBloc>().add(GetWeatherByCity());
+                      log(state.searchQuery);
+                      locator<NavigationService>().goBack();
+                    },
+                  ),
+                ),
+              );
+            });
+            return choices;
+          }
         }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Популярные города',
+                '$type города',
                 style: TextStyle(
                   color: state.isDark != true
                       ? AppColors.tl_primary

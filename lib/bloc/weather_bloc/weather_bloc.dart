@@ -28,12 +28,20 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     on<ChangeTheme>((event, emit) {
       emit(state.copyWith(isDark: !state.isDark));
     });
+    on<ChangeCitySize>((event, emit) {
+      emit(state.copyWith(citySize: event.size));
+    });
     on<ChangeSearchQuery>((event, emit) async {
       emit(state.copyWith(searchQuery: event.searchQuery));
     });
     on<GetForecast>((event, emit) async {
       String forecast = await _localSettingRepository.readCurrentWeather();
+      String citySize = await _localSettingRepository.readCitySize();
+      String cityName = await _localSettingRepository.readCity();
+
       emit(state.copyWith(
+        citySize: citySize,
+        cityName: cityName,
         listHourly: json.decode(forecast)['hourly'],
         listDaily: json.decode(forecast)['daily'],
       ));
@@ -55,6 +63,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response, then parse the JSON.
           _localSettingRepository.saveCurrentWeather(response.body);
+
           List hourly = json.decode(response.body)['hourly'];
           List daily = json.decode(response.body)['daily'];
           emit(
@@ -90,10 +99,15 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
             "http://api.openweathermap.org/data/2.5/onecall?lat=${state.lat}&lon=${state.lon}&exclude=minutely&appid=800fa38035fea9e71554e7d7134e0190&units=metric&lang=ru");
         var response =
             await http.get(url, headers: {"Accept": "application/json"});
-
+        Uri urlMonth1 = Uri.parse(
+            'https://history.openweathermap.org/data/2.5/aggregated/month?month=1&${state.lat}&lon=${state.lon}&appid=800fa38035fea9e71554e7d7134e0190&units=metric&lang=ru');
+        var responseMonth1 =
+            await http.get(urlMonth1, headers: {"Accept": "application/json"});
+        log(json.decode(responseMonth1.body)['result']['temp']['median']);
         if (response.statusCode == 200) {
           // If the server did return a 200 OK response, then parse the JSON.
           _localSettingRepository.saveCurrentWeather(response.body);
+          _localSettingRepository.saveCitySize(state.citySize);
           _localSettingRepository
               .saveCity(json.decode(responseCity.body)['name']);
           List hourly = json.decode(response.body)['hourly'];
@@ -102,6 +116,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
             state.copyWith(
               cityName: json.decode(responseCity.body)['name'],
               listHourly: hourly,
+              citySize: state.citySize,
               listDaily: daily,
               weatherModel: WeatherModel.fromJson(
                 json.decode(response.body),
@@ -144,11 +159,18 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       }
       // Проверяем наш сохраненный город. Также можно будет поключить проверку геопозиции, чтобы не вручную проверять
       String city = await _localSettingRepository.readCity();
+      String citySize = await _localSettingRepository.readCitySize();
       if (city != "Couldn't read file") {
         emit(state.copyWith(cityName: city));
+        emit(
+          state.copyWith(
+              citySize:
+                  citySize == "Couldn't read file" ? "Большой" : citySize),
+        );
       } else {
         emit(state.copyWith(cityName: "Лондон, GB"));
         _localSettingRepository.saveCity("Лондон, GB");
+        _localSettingRepository.saveCitySize("Большой");
       }
       add(GetCurentWeather());
     });

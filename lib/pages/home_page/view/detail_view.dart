@@ -47,7 +47,7 @@ class DetailView extends StatelessWidget {
         child: Row(
           children: [
             Image.asset(
-             darkMode != true
+              darkMode != true
                   ? "assets/weather/${icon.substring(0, icon.length - 1)}n.png"
                   : "assets/weather/${icon.substring(0, icon.length - 1)}d.png",
               width: 50,
@@ -101,48 +101,52 @@ class DetailView extends StatelessWidget {
 
     Widget _buildForecast() {
       return BlocBuilder<WeatherBloc, WeatherState>(
-  builder: (context, state) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Прогноз на неделю',
-              style: TextStyle(
-                color: darkMode != true ? AppColors.tl_primary :  AppColors.td_primary,
-                fontSize: 18,
-                fontWeight: FontWeight.w300,
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Прогноз на неделю',
+                  style: TextStyle(
+                    color: darkMode != true
+                        ? AppColors.tl_primary
+                        : AppColors.td_primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Container(
-            height: 540,
-            margin: const EdgeInsets.fromLTRB(16, 25, 16, 45),
-            decoration: BoxDecoration(
-                color: darkMode != true ?  AppColors.cl_background :  AppColors.cd_background,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                boxShadow: [
-                  setBoxShadowDark(darkMode),
-                  setBoxShadowLight(darkMode),
-                ]),
-            child: Center(
-              child: state.listDaily.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: 8,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return _itemForecast(listDaily[index]);
-                      },
-                    )
-                  : CircularProgressIndicator(),
-            ),
-          ),
-        ],
+              Container(
+                height: 540,
+                margin: const EdgeInsets.fromLTRB(16, 25, 16, 45),
+                decoration: BoxDecoration(
+                    color: darkMode != true
+                        ? AppColors.cl_background
+                        : AppColors.cd_background,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    boxShadow: [
+                      setBoxShadowDark(darkMode),
+                      setBoxShadowLight(darkMode),
+                    ]),
+                child: Center(
+                  child: state.listDaily.isNotEmpty
+                      ? ListView.builder(
+                    itemCount: 8,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return _itemForecast(listDaily[index]);
+                    },
+                  )
+                      : CircularProgressIndicator(),
+                ),
+              ),
+            ],
+          );
+        },
       );
-  },
-);
     }
 
     Widget _detailItem(String title, String subtitle, String icon) {
@@ -152,7 +156,9 @@ class DetailView extends StatelessWidget {
           margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
           padding: EdgeInsets.fromLTRB(16, 5, 16, 5),
           decoration: BoxDecoration(
-              color: darkMode != true ?  AppColors.cl_background :  AppColors.cd_background,
+              color: darkMode != true
+                  ? AppColors.cl_background
+                  : AppColors.cd_background,
               borderRadius: BorderRadius.all(Radius.circular(20)),
               boxShadow: [
                 setBoxShadowDark(darkMode),
@@ -169,7 +175,9 @@ class DetailView extends StatelessWidget {
                   Text(
                     "$title",
                     style: TextStyle(
-                      color: darkMode != true ?  AppColors.tl_primary :  AppColors.td_primary,
+                      color: darkMode != true
+                          ? AppColors.tl_primary
+                          : AppColors.td_primary,
                       fontSize: 13,
                       fontWeight: FontWeight.w300,
                     ),
@@ -178,7 +186,9 @@ class DetailView extends StatelessWidget {
                   Text(
                     "$subtitle",
                     style: TextStyle(
-                      color: darkMode != true ?  AppColors.tl_primary :  AppColors.td_primary,
+                      color: darkMode != true
+                          ? AppColors.tl_primary
+                          : AppColors.td_primary,
                       fontSize: 13,
                       fontWeight: FontWeight.w400,
                     ),
@@ -212,35 +222,46 @@ class DetailView extends StatelessWidget {
     }
 
     Widget _buildDetails() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Детали',
-              style: TextStyle(
-                color:darkMode != true ?  AppColors.tl_primary :  AppColors.td_primary,
-                fontSize: 18,
-                fontWeight: FontWeight.w300,
+      return BlocBuilder<WeatherBloc, WeatherState>(
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Детали',
+                  style: TextStyle(
+                    color: darkMode != true
+                        ? AppColors.tl_primary
+                        : AppColors.td_primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Row(
-            children: [
-              _detailItem(_setDirection(), "${windSpeed} км/ч", "wind"),
-              _detailItem(
-                  "Ощущается", "${feelsLike.round()}°", "temperature"),
+              Row(
+                children: [
+                  _detailItem("Категория Города", "${state.citySize}", "wind"),
+                ],
+              ),
+              Row(
+                children: [
+                  _detailItem(_setDirection(), "${windSpeed} км/ч", "wind"),
+                  _detailItem("Ощущается", "${feelsLike.round()}°",
+                      "temperature"),
+                ],
+              ),
+              Row(
+                children: [
+                  _detailItem("Влажность", "${humidity} %", "humidity"),
+                  _detailItem("Давление", "${pressure} hPa", "pressure"),
+                ],
+              ),
+              SizedBox(height: 20),
             ],
-          ),
-          Row(
-            children: [
-              _detailItem("Влажность", "${humidity} %", "humidity"),
-              _detailItem("Давление", "${pressure} hPa", "pressure"),
-            ],
-          ),
-          SizedBox(height: 20),
-        ],
+          );
+        },
       );
     }
 

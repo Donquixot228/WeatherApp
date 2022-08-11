@@ -12,7 +12,10 @@ class GetForecast extends WeatherEvent {}
 class GetCurentWeather extends WeatherEvent {}
 
 class GetWeatherByCity extends WeatherEvent {}
-
+class ChangeCitySize extends WeatherEvent {
+  String size;
+  ChangeCitySize(this.size);
+}
 class ChangeSearchQuery extends WeatherEvent {
   String searchQuery;
 

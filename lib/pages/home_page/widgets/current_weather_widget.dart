@@ -48,7 +48,8 @@ class CurrentWeather extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.w300),
                 ),
-                SizedBox(height: 40)
+                SizedBox(height: 40),
+
               ],
             ),
           ],

@@ -44,7 +44,24 @@ class LocalSettingRepository {
     await file.writeAsString(currentTheme);
     log('Saved theme \"$currentTheme\".');
   }
-
+  saveCitySize(String citySize) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/citySize.txt');
+    await file.writeAsString(citySize);
+    log('Saved theme \"$citySize\".');
+  }
+  Future<String> readCitySize() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/citySize.txt');
+      String citySize = await file.readAsString();
+      log("Current city is: \"$citySize\". Read citySize from file");
+      return citySize;
+    } catch (e) {
+      log("Couldn't read city from file");
+      return "Couldn't read file";
+    }
+  }
   Future<String> readCity() async {
     try {
       final directory = await getApplicationDocumentsDirectory();

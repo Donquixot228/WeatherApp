@@ -8,6 +8,7 @@ enum WeatherStatus {
 
 class WeatherState {
   final bool isDark;
+  final String citySize;
   final String errorMessage;
   final String cityName;
   final double lon;
@@ -20,6 +21,7 @@ class WeatherState {
 
   WeatherState({
     required this.isDark,
+    required this.citySize,
     required this.searchQuery,
     required this.cityName,
     required this.lon,
@@ -35,6 +37,7 @@ class WeatherState {
     return WeatherState(
       isDark: false,
       errorMessage: '',
+      citySize: 'Большой',
       searchQuery: '',
       cityName: 'Лондон, GB',
       lat: 51.51,
@@ -53,6 +56,7 @@ class WeatherState {
     double? lat,
     String? searchQuery,
     List? listDaily,
+    String? citySize,
     List? listHourly,
     String? errorMessage,
     WeatherModel? weatherModel,
@@ -60,6 +64,7 @@ class WeatherState {
   }) {
     return WeatherState(
       isDark: isDark ?? this.isDark,
+      citySize: citySize??this.citySize,
       status: status ?? this.status,
       searchQuery: searchQuery ?? this.searchQuery,
       errorMessage: errorMessage ?? this.errorMessage,
