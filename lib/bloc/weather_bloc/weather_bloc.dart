@@ -26,7 +26,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         _mastersDatabaseProvider = mastersDatabaseProvider,
         super(WeatherState.initial()) {
     on<ChangeTheme>((event, emit) {
-      // TODO: implement event handler
+      emit(state.copyWith(isDark: !state.isDark));
     });
     on<ChangeSearchQuery>((event, emit) async {
       emit(state.copyWith(searchQuery: event.searchQuery));

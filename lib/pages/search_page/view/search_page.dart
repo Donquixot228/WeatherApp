@@ -65,7 +65,10 @@ class SearchPage extends StatelessWidget {
                       SizedBox(height: 120),
                       Container(
                         margin: const EdgeInsets.only(
-                            left: 16, right: 16, bottom: 45),
+                          left: 16,
+                          right: 16,
+                          bottom: 45,
+                        ),
                         width: 100,
                         height: 58,
                         decoration: BoxDecoration(
@@ -108,7 +111,7 @@ class SearchPage extends StatelessWidget {
                                       ? AppColors.cl_background
                                       : AppColors.cd_background,
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
+                                      BorderRadius.all(Radius.circular(15)),
                                   boxShadow: [
                                     setBoxShadowDark(state.isDark),
                                     setBoxShadowLight(state.isDark),
@@ -122,21 +125,15 @@ class SearchPage extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: state.isDark != true
-                                      ? AppColors.cl_background
-                                      : AppColors.cd_background,
+                                      ? AppColors.cd_background
+                                      : AppColors.cl_background,
                                   fontSize: 22,
                                   fontWeight: FontWeight.w300),
                             ),
                           ),
                           GestureDetector(
                             onTap: () async {
-                              // if (_darkMode == true) {
-                              //   setState(() => _darkMode = false);
-                              //   saveTheme("light");
-                              // } else {
-                              //   setState(() => _darkMode = true);
-                              //   saveTheme("dark");
-                              // }
+                             context.read<WeatherBloc>().add(ChangeTheme());
                             },
                             child: Container(
                               width: 50,
@@ -148,7 +145,7 @@ class SearchPage extends StatelessWidget {
                                     ? AppColors.cl_background
                                     : AppColors.cd_background,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(15)),
+                                    BorderRadius.all(Radius.circular(15)),
                                 boxShadow: [
                                   setBoxShadowDark(state.isDark),
                                   setBoxShadowLight(state.isDark),

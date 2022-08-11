@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather/service/locator.dart';
+import 'package:weather/service/navigation_service.dart';
 
 import '../../../bloc/weather_bloc/weather_bloc.dart';
 import '../../../resources/app_colors.dart';
@@ -38,6 +40,7 @@ class BuildPopularCity extends StatelessWidget {
                     context.read<WeatherBloc>().add(ChangeSearchQuery(city));
                     context.read<WeatherBloc>().add(GetWeatherByCity());
                     log(state.searchQuery);
+                    locator<NavigationService>().goBack();
                   },
                 ),
               ),
