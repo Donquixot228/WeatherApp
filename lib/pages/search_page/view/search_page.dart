@@ -26,18 +26,13 @@ class SearchPage extends StatelessWidget {
     return BlocListener<WeatherBloc, WeatherState>(
       listener: (context, state) {
         if (state.status == WeatherStatus.loading) {
+         // FlushbarHelper.createInformation(message: 'Загружаем погоду').show(context);
           context.loaderOverlay.show();
         }
         if (state.status == WeatherStatus.error) {
           FlushbarHelper.createError(message: state.errorMessage).show(context);
-          // if (state.loginStatus == LoginStatus.success) {
-          //   Navigator.of(context).push(
-          //     MainControllerPage.route(),
-          //   );
-          //   FlushbarHelper.createSuccess(
-          //       message:'Welcome to the community'
-          //   ).show(context);(context);
-        } else {
+        }
+        else {
           context.loaderOverlay.hide();
         }
       },

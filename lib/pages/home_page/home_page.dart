@@ -28,15 +28,12 @@ class HomePage extends StatelessWidget {
         if (state.status == WeatherStatus.loading) {
           context.loaderOverlay.show();
         }
+        if (state.status == WeatherStatus.done) {
+          FlushbarHelper.createSuccess(message: 'Погода загружена').show(context);
+          context.read<WeatherBloc>().emit(state.copyWith(status: WeatherStatus.initial));
+        }
         if (state.status == WeatherStatus.error) {
           FlushbarHelper.createError(message: state.errorMessage).show(context);
-          // if (state.loginStatus == LoginStatus.success) {
-          //   Navigator.of(context).push(
-          //     MainControllerPage.route(),
-          //   );
-          //   FlushbarHelper.createSuccess(
-          //       message:'Welcome to the community'
-          //   ).show(context);(context);
         } else {
           context.loaderOverlay.hide();
         }
@@ -91,19 +88,10 @@ class HomePage extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () async {
                                       context.read<WeatherBloc>().emit(
-                                          state.copyWith(searchQuery: ''));
+                                            state.copyWith(searchQuery: ''),
+                                          );
                                       locator<NavigationService>()
                                           .navigateTo(SearchPage.routeName);
-
-                                      // await Navigator.push(
-                                      //   context,
-                                      //   FadeRoute(
-                                      //     page: SearchScreen(darkMode: _darkMode),
-                                      //   ),
-                                      // );
-                                      // _getForecast();
-                                      // _setCity();
-                                      //_setTheme();
                                     },
                                     child: Container(
                                       width: 50,

@@ -76,6 +76,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
             ),
           );
         } else {
+          emit(state.copyWith(status: WeatherStatus.error));
           // If the server did not return a 200 OK response, then throw an exception.
           throw Exception('Failed to load Current Weather');
         }
@@ -83,6 +84,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       emit(state.copyWith(status: WeatherStatus.initial));
     });
     on<GetWeatherByCity>((event, emit) async {
+      emit(state.copyWith(status: WeatherStatus.loading));
       log(state.searchQuery);
       Uri url = Uri.parse(
           "http://api.openweathermap.org/data/2.5/weather?q=${state.searchQuery}&appid=800fa38035fea9e71554e7d7134e0190&units=metric&lang=ru");
@@ -107,6 +109,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
               .saveCity(json.decode(responseCity.body)['name']);
           List hourly = json.decode(response.body)['hourly'];
           List daily = json.decode(response.body)['daily'];
+          emit(state.copyWith(status: WeatherStatus.done));
           emit(
             state.copyWith(
               cityName: json.decode(responseCity.body)['name'],
@@ -118,6 +121,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
               ),
             ),
           );
+          log(state.status.toString());
         } else {
           // If the server did not return a 200 OK response, then throw an exception.
           throw Exception('Failed to load Current Weather');
@@ -134,7 +138,10 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
             icon: json.decode(response.body)['weather'][0]['icon'],
           ),
         );
+        emit(state.copyWith(status: WeatherStatus.initial));
+
       } else {
+        emit(state.copyWith(status: WeatherStatus.error));
         // If the server did not return a 200 OK response, then throw an exception.
         throw Exception('Failed to load Current Weather');
       }

@@ -4,6 +4,7 @@ enum WeatherStatus {
   loading,
   error,
   initial,
+  done,
 }
 
 class WeatherState {
